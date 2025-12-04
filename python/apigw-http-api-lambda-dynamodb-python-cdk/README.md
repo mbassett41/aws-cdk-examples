@@ -8,6 +8,33 @@ Creates an [AWS Lambda](https://aws.amazon.com/lambda/) function writing to [Ama
 
 ![architecture](docs/architecture.png)
 
+## Security Prerequisites
+
+### AWS CloudTrail
+This application requires AWS CloudTrail to be enabled for comprehensive security logging and audit trails. CloudTrail should be configured at the account or organization level:
+
+1. Create a CloudTrail trail with management events enabled
+2. Configure S3 bucket for CloudTrail log storage with appropriate retention
+3. Optionally enable CloudTrail data events for S3 and Lambda for detailed activity logging
+4. Consider using CloudTrail Lake for long-term retention and SQL-based querying
+
+For setup instructions, see: https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-create-and-update-a-trail.html
+
+## Logging Architecture
+
+This stack implements comprehensive logging aligned with AWS Well-Architected Framework SEC04-BP01:
+
+- **VPC Flow Logs**: Network traffic monitoring with 1-year retention in CloudWatch Logs
+- **API Gateway Access Logs**: Detailed API request logging with 1-year retention
+- **Lambda Function Logs**: Application logs with 1-year retention
+- **DynamoDB Point-in-Time Recovery**: Continuous backups for data protection and audit trails
+- **Centralized Log Archive**: S3 bucket with lifecycle policies for 7-year log retention
+
+### Querying Logs
+
+- **CloudWatch Logs Insights**: Query VPC Flow Logs, API Gateway logs, and Lambda logs
+- **Amazon Athena**: Query archived logs in S3 for long-term analysis
+
 ## Setup
 
 The `cdk.json` file tells the CDK Toolkit how to execute your app.
